@@ -22,13 +22,6 @@ Projeto desenvolvido em Python com o objetivo de praticar conceitos fundamentais
 * Tratamento de exceções (`try` e `except`)
 * Organização de código
 
-## Como executar
-
-```bash
-python cadastro_produtos.py
-```
-
 ## Autor
 
 Gustavo Henrique
-

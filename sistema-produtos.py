@@ -2,6 +2,8 @@ produtos = [] #lista onde guardo os produtos
 maior_valor = 0
 identificacao = 1
 
+#Falta corrigir alguns bugs na lógica
+
 def mostrar_informacao(produto): # Testado
     print(f"\nInformações do produto - {produto['nome']} ")
     print(f"Nome: {produto['nome']}")
@@ -36,24 +38,25 @@ def recalcular_maior_valor(): # Testado
             nome_produto = produto['nome']
     return maior_valor, nome_produto 
 
-def listar_produtos(): # 2 Testado
+def listar_produto(): # 2 Testado
 
     if len(produtos) == 0:
         print("Não há produtos para listar")
         return
     
-    print("\n---- Produto com maior valor em estoque ----")
-    print(f"\n-- Produto : {nome_produto} --")
-    print(f"-- Produto possui maior valor total em estoque : {maior_valor} --\n")
-    
     for produto in produtos:
         print(f"\n---- Produto {produto['id']} ----")
         mostrar_informacao(produto)
+
+    print("\n---- Produto com maior valor em estoque ----")
+    print(f"\n-- Produto : {nome_produto} --")
+    print(f"-- Produto possui maior valor total em estoque : R$ {maior_valor} --\n")
+    return nome_produto, maior_valor
     
 def buscar_produto(): # 3 Testado
     while True:
         if len(produtos) == 0: 
-            print(f"Não há produtos para listar.")
+            print(f"Não há produtos para buscar.")
             return
 
         buscar_produto = input("\nDeseja buscar o produto por (Nome) ou (Id)? : ").strip().title()
@@ -95,7 +98,8 @@ def buscar_produto(): # 3 Testado
 
 while True: #programa
 
-    print("\n1 - Cadastrar Produto")
+    print("\n=== Sistema de Cadastro de Produtos ===")
+    print("1 - Cadastrar Produto")
     print("2 - Listar Produto")
     print("3 - Buscar Produto")
     print("4 - Remover Produto")
@@ -113,38 +117,39 @@ while True: #programa
             print("Digite uma informação válida, tente outra vez.\n")
 
     #opçoes
-    if opcao == 1: #cadastro
+    if opcao == 1: #cadastro Testado  
+              
+            nome = input("\nDigite o nome do produto : ").strip().title()
+            preco = pedir_numero()
+            quantidade = pedir_quantidade()
 
-        nome = input("\nDigite o nome do produto : ").strip().title()
+            produto = { #dicionario
+                'nome' : nome,
+                'preco' : preco,
+                'quantidade' : quantidade,
+                'id' : identificacao
+                }
 
-        preco = pedir_numero()
-        quantidade = pedir_quantidade()
+            valor_estoque_produto = produto['preco'] * produto['quantidade']
+            produto['valor_estoque'] = valor_estoque_produto
 
-        produto = { #dicionario
-            'nome' : nome,
-            'preco' : preco,
-            'quantidade' : quantidade,
-            'id' : identificacao
-        }
+            if preco > maior_valor: #Aqui vejo 
+                nome_produto = nome
+                maior_valor = valor_estoque_produto
 
-        valor_estoque_produto = produto['preco'] * produto['quantidade'] #calculo estoque
-        produto['valor_estoque'] = valor_estoque_produto #criando espaço dentro do dict
+            produtos.append(produto) #guarda as informaçoes do dict dentro da lista
+            identificacao += 1 #contador do id
 
-        if valor_estoque_produto > maior_valor: # esquema para ver maior estoque
-            maior_valor = valor_estoque_produto 
-            nome_produto = produto["nome"]
+            maior_valor, nome_produto = recalcular_maior_valor()
 
-        produtos.append(produto) #guarda as informaçoes do dict dentro da lista
 
-        identificacao += 1 #contador do id
-    
-    elif opcao == 2: #listagem
-        listar_produtos()
+    elif opcao == 2: #listagem Testado
+        nome_produto, maior_valor = listar_produto()
         
-    elif opcao == 3: #buscagem
+    elif opcao == 3: #buscagem Testado
         buscar_produto() 
 
-    elif opcao == 4: #remocao
+    elif opcao == 4: #remocao Testado
         if len(produtos) == 0:
             print("Não há produtos na lista para remover.")
 
@@ -193,7 +198,7 @@ while True: #programa
                 if not encontrado:
                     print("Verifique se digitou errado. Produto não encontrado no sistema!")
 
-    elif opcao == 5:
+    elif opcao == 5: # edição Testado
         if len(produtos) == 0:
             print("Não há produtos na lista para editar.")
         
@@ -231,6 +236,7 @@ while True: #programa
                             novo_nome = input("Digite o novo nome do produto : ").strip().title()
                             produto['nome'] = novo_nome
                             print("---- Produto Editado ----")
+                            maior_valor, nome_produto = recalcular_maior_valor()
                             break
 
                 elif editar_informacao == 2:
@@ -243,6 +249,7 @@ while True: #programa
                                 except ValueError:
                                     print("Digite apenas números aqui!")
                             produto['preco'] = novo_preco
+                            maior_valor, nome_produto = recalcular_maior_valor()
                             print("---- Produto Editado ----")
                             break
 
@@ -256,12 +263,11 @@ while True: #programa
                                 except ValueError:
                                     print("Digite apenas números aqui!")
                             produto['quantidade'] = nova_quantidade
+                            maior_valor, nome_produto = recalcular_maior_valor()
+                            print("---- Produto Editado ----")                            
                 else:
                     print("Verifique se digitou algo errado. Produto não encontrado no sistema.\n")
                     
-                valor_estoque_produto = produto['preco'] * produto['quantidade'] #Recalculando
-                produto['valor_estoque'] = valor_estoque_produto #Recalculando
-            
     elif opcao == 6: #saida do programa
         print("Obrigado!")
         break

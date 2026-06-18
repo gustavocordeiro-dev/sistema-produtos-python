@@ -2,8 +2,6 @@ produtos = [] #lista onde guardo os produtos
 maior_valor = 0
 identificacao = 1
 
-#Falta corrigir alguns bugs na lógica
-
 def mostrar_informacao(produto): # Testado
     print(f"\nInformações do produto - {produto['nome']} ")
     print(f"Nome: {produto['nome']}")

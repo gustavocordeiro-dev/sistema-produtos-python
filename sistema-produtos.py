@@ -1,274 +1,346 @@
-produtos = [] #lista onde guardo os produtos
-maior_valor = 0
-identificacao = 1
+# Lista de produtos onde irei guardar os (dicionarios : produtos)
+lista_produtos = []
 
-def mostrar_informacao(produto): # Testado
-    print(f"\nInformações do produto - {produto['nome']} ")
-    print(f"Nome: {produto['nome']}")
-    print(f"Preço: R$ {produto['preco']}")
-    print(f"Quantidade: {produto['quantidade']}")
-    print(f"Identificação do Produto : {produto['id']}")
-    print(f"Valor total de estoque: R$ {produto['valor_estoque']}")
+# Dicionario produto
+produto = {}
 
-def pedir_numero(): # Testado
-    while True: 
-        try:
-            preco = float(input("Digite o preço do produto : "))
-            return preco
-        except ValueError:
-            print("Digite apenas valores numéricos aqui!\n")
+# Contadores para usar nos ID´s dos produtos
+id_produtos = 1 
+contador_id = 1
 
-def pedir_quantidade(): # Testado
-    while True: 
-        try:
-            quantidade = int(input("Digite a quantidade do produto : "))
-            return quantidade
-        except ValueError:
-            print("Digite apenas valores numéricos aqui!\n")
-
-def recalcular_maior_valor(): # Testado
-    maior_valor = 0
-    nome_produto = ""
-
-    for produto in produtos:
-        if produto['valor_estoque'] > maior_valor:
-            maior_valor = produto['valor_estoque']
-            nome_produto = produto['nome']
-    return maior_valor, nome_produto 
-
-def listar_produto(): # 2 Testado
-
-    if len(produtos) == 0:
-        print("Não há produtos para listar")
-        return
-    
-    for produto in produtos:
-        print(f"\n---- Produto {produto['id']} ----")
-        mostrar_informacao(produto)
-
-    print("\n---- Produto com maior valor em estoque ----")
-    print(f"\n-- Produto : {nome_produto} --")
-    print(f"-- Produto possui maior valor total em estoque : R$ {maior_valor} --\n")
-    return nome_produto, maior_valor
-    
-def buscar_produto(): # 3 Testado
-    while True:
-        if len(produtos) == 0: 
-            print(f"Não há produtos para buscar.")
-            return
-
-        buscar_produto = input("\nDeseja buscar o produto por (Nome) ou (Id)? : ").strip().title()
-        if buscar_produto == "Nome":
-            break
-        elif buscar_produto == "Id":
-            break
-        else:
-            print("Digite uma informação válida, tente outra vez.")
-
-    if buscar_produto == "Nome": #por nome
-        buscar_produto_nome = input("Digite o nome do produto : ").strip().title()
-        encontrado = False
-        for produto in produtos:
-            if produto['nome'] == buscar_produto_nome:
-                print("\n---- Produto Buscado com Sucesso ----")
-                encontrado = True
-                mostrar_informacao(produto)
-                break
-        if not encontrado:
-            print("Verifique se digitou errado. Produto não encontrado no sistema!")
-
-    if buscar_produto == "Id":
-        while True:
-            try:
-                buscar_produto_id = int(input("Digite o Id do produto : "))
-                break
-            except ValueError:
-                print("Digite apenas números.")
-        encontrado = False
-        for produto in produtos:
-            if produto['id'] == buscar_produto_id:
-                print("\n---- Produto Buscado com Sucesso ----")
-                encontrado = True
-                mostrar_informacao(produto)
-                break
-        if not encontrado:
-            print("Verifique se digitou errado. Produto não encontrado no sistema!")
-
-while True: #programa
-
-    print("\n=== Sistema de Cadastro de Produtos ===")
+def mostrar_menu_opcoes():
+    print("\n=== Sistema Cadastro de Produtos ===")
     print("1 - Cadastrar Produto")
     print("2 - Listar Produto")
     print("3 - Buscar Produto")
-    print("4 - Remover Produto")
-    print("5 - Editar Produto")
+    print("4 - Editar Produto")
+    print("5 - Remover Produto")
     print("6 - Sair\n")
 
-    while True: #Testando erros
+# Opção 1 do menu : Cadastrar Produto
+def cadastrar_produto(produto):
+
+    nome_produto = input("Digite o nome do produto : ").strip().title()
+
+    if nome_produto == "":
+        print("Informação invalida.")
+        return
+    
+    # Testando ValueError para a variavel valor do produto
+    try: 
+        valor_produto = float(input("Digite o valor do produto : "))
+    except ValueError:
+        print("Digite apenas números. Produto não foi cadastrado!\n")
+        return
+
+    # Testando ValueError para a variavel quantidade do produto
+    try:
+        quantidade_produto = int(input("Digite a quantidade do produto : "))
+    except ValueError:
+        print("Digite apenas números. Produto não foi cadastrado!\n")
+        return
+
+    produto = {
+        "nome" : nome_produto,
+        "valor" : valor_produto,
+        "quantidade" : quantidade_produto,
+        "id" : id_produtos
+    }
+
+    # Aqui cria o valor de estoque
+    produto['valor_estoque'] = valor_produto * quantidade_produto
+    
+    lista_produtos.append(produto)
+
+    return produto, nome_produto
+    
+# Opção 2 do menu : Listar Produto
+def listar_produtos(produto):
+    print("\n---Tabela de Produtos---")
+    for produto in lista_produtos:
+        mostrar_informacoes_produto(produto)
+
+# faz parte da Opção 3 do menu : Buscar Produto por (Nome)  
+def buscar_nome_produto1(produto, encontrado):
+    for produto in lista_produtos:
+        if produto['nome'] == buscar_nome_produto:
+            print("\n--Produto Encontrado--")
+            mostrar_informacoes_produto(produto)
+            encontrado = True
+    return encontrado
+
+# Faz parte da Opção 3 do menu : Buscar Produto por (Id)
+def buscar_id_produto2(produto, encontrado):
+    for produto in lista_produtos:
+        if produto['id'] == buscar_id_produto:
+            print("\n--Produto Encontrado--")
+            mostrar_informacoes_produto(produto)
+            encontrado = True
+    return encontrado
+
+# Opção 6 do menu : sair
+def sair_do_menu(): 
+    print("Obrigado.")
+
+# Função que mostra informações do produto
+def mostrar_informacoes_produto(produto):
+    print(f"-Produto nº {produto['id']}-")
+    print(f"Nome do produto : {produto['nome']}")
+    print(f"Valor do produto : {produto['valor']}")
+    print(f"Quantidade do produto : {produto['quantidade']}")
+    print(f"Valor de estoque : {produto['valor_estoque']}")
+    print(f"ID do produto : {produto['id']}\n")
+    
+def recalcular_estoque(x, y):
+    for produto in lista_produtos:
+        if produto['id'] == inserir_id_produto:
+            produto['valor_estoque'] = x * y
+            return produto['valor_estoque']
+
+while True:
+    mostrar_menu_opcoes()
+
+    # Try except ValueError escolha de opções do menu
+    while True:
         try:
-            opcao = int(input("Quais das opções acima você deseja? : "))
-            if opcao >= 1 and opcao <= 6:
-                break
-            elif opcao < 1 or opcao > 6:
-                print("Digite uma informação válida, tente outra vez. \n")
+            escolha_menu_opcoes = int(input("Digite uma opção : ")) 
+            break
         except ValueError:
-            print("Digite uma informação válida, tente outra vez.\n")
+            print("Opção invalida. Digite apenas números.\n") 
 
-    #opçoes
-    if opcao == 1: #cadastro Testado  
-              
-            nome = input("\nDigite o nome do produto : ").strip().title()
-            preco = pedir_numero()
-            quantidade = pedir_quantidade()
+    # Testando se o numero está no menu
+    if escolha_menu_opcoes < 1 or escolha_menu_opcoes > 6: 
+        print("Este número não está inserido no menu de opções.")
+        continue
+    
+    # Opção 1 do menu : Cadastrar Produto
+    if escolha_menu_opcoes == 1:
 
-            produto = { #dicionario
-                'nome' : nome,
-                'preco' : preco,
-                'quantidade' : quantidade,
-                'id' : identificacao
-                }
+        print(f"\n---Cadastrando Produto {id_produtos}---")
+        resultado_cadastro = cadastrar_produto(produto)
 
-            valor_estoque_produto = produto['preco'] * produto['quantidade']
-            produto['valor_estoque'] = valor_estoque_produto
+        if not resultado_cadastro:
+            continue
 
-            if preco > maior_valor: #Aqui vejo 
-                nome_produto = nome
-                maior_valor = valor_estoque_produto
+        # Contador de id do produto para sempre ter um número fixo
+        id_produtos = contador_id + 1
 
-            produtos.append(produto) #guarda as informaçoes do dict dentro da lista
-            identificacao += 1 #contador do id
+        # Um loop de contagem para o contador sempre estar aumentando
+        contador_id = contador_id + 1
+   
 
-            maior_valor, nome_produto = recalcular_maior_valor()
-
-
-    elif opcao == 2: #listagem Testado
-        nome_produto, maior_valor = listar_produto()
+    # Opção 2 do menu : Listar Produto
+    elif escolha_menu_opcoes == 2:
+        if not lista_produtos:
+            print("Não há produtos para listar.")
+            continue
         
-    elif opcao == 3: #buscagem Testado
-        buscar_produto() 
+        listar_produtos(produto)
+    
+    # Opção 3 do menu : Buscar Produto
+    elif escolha_menu_opcoes == 3:
 
-    elif opcao == 4: #remocao Testado
-        if len(produtos) == 0:
-            print("Não há produtos na lista para remover.")
+        # Verificando se a lista está vazia
+        if not lista_produtos:
+            print("Não há produtos para buscar.")
+            continue
+        
+        # Vendo se o usuario pretende fazer busca por ID ou Nome
+        print("\n---Buscando Produto---")
+        buscar_id_nome = input("Deseja buscar o produto na tabela por (nome) ou (id) : ").strip().title()
+        encontrado = False
 
-        else:
-            while True:
-                remover = input("\nDeseja remover o produto por (Nome) ou (Id)? : ").strip().title()
-                if remover == "Nome":
-                    break
-                elif remover == "Id":
-                    break
-                else:
-                    print("Verifique se digitou errado. Produto não encontrado no sistema!")
+        # Fazendo busca por Nome
+        if buscar_id_nome == "Nome":
+            buscar_nome_produto = input("Digite o nome do produto : ").strip().title()
 
-            if remover == "Nome": #por nome
-                remover_produto_nome = input("Digite o nome do produto : ").strip().title()
-                encontrado = False
-                for produto in produtos:
-                    if produto['nome'] == remover_produto_nome:
-                        encontrado = True
-                        produtos.remove(produto)
-                        print("Produto removido com sucesso.")
-                        if nome_produto == remover_produto_nome:
-                            nome_produto = "Produto Removido, Recalculando sistema..."
-                            maior_valor, nome_produto = recalcular_maior_valor()
-                        break
-                if not encontrado:
-                    print("Verifique se digitou errado. Produto não encontrado no sistema!")
+            #Percorrendo lista_produtos para achar produto
+            encontrado = buscar_nome_produto1(produto, encontrado)
+         
+            if not encontrado:
+                print("Produto não encontrado.")
+                continue
+        
+        #Fazendo busca por ID
+        elif buscar_id_nome == "Id":
+
+            #Testando ValueError para buscar_id_produto
+            try:
+                buscar_id_produto = int(input("Digite o ID do produto : "))
+            except ValueError:
+                print("Digite apenas números. Produto não encontrado")
+                continue
             
-            elif remover == "Id": #por id
-                while True:
-                    try:
-                        remover_produto_id = int(input("Digite o Id do produto : "))
-                        break
-                    except ValueError:
-                        print("Digite apenas números aqui!")
-                encontrado = False
-                for produto in produtos: 
-                    if produto['id'] == remover_produto_id:
-                        encontrado = True
-                        produtos.remove(produto)
-                        print("Produto removido com sucesso.")
-                        if produto['nome'] == nome_produto:
-                            nome_produto = "Produto Removido, Recalculando sistema..." 
-                            maior_valor, nome_produto = recalcular_maior_valor() 
-                        break
-                if not encontrado:
-                    print("Verifique se digitou errado. Produto não encontrado no sistema!")
+            encontrado = False
 
-    elif opcao == 5: # edição Testado
-        if len(produtos) == 0:
-            print("Não há produtos na lista para editar.")
+            #Percorrendo lista_produtos para achar ID
+            encontrado = buscar_id_produto2(produto, encontrado)
+
+            if not encontrado:
+                print("Produto não encontrado.")
+                continue
         
         else:
-            while True:
-                try:
-                    editar = int(input("\nDigite o ID do Produto: "))
+            print("Informação incorreta. Produto não encontrado.")
+
+    # Opção 4 do menu : Editar Informações do Produto
+    elif escolha_menu_opcoes == 4:
+
+        if not lista_produtos:
+            print("Não há produtos para editar.")
+            continue
+
+        # Variavel feita para indicar qual produto será editado
+        try:
+            inserir_id_produto = int(input("\nDigite o ID do produto que deseja editar : "))
+        except ValueError:
+            print("Digite apenas números.")
+            continue
+
+        encontrado = False
+
+        for produto in lista_produtos:
+            if produto['id'] == inserir_id_produto:
+                print("\n---INFORMAÇÃO DO PRODUTO---")
+                mostrar_informacoes_produto(produto)
+                encontrado = True
+                break
+        
+        if not encontrado:
+            print(("Informação incorreta. Produto não encontrado."))
+            continue
+
+        print("---Editando Informações do Produto---")
+        print("1 - Editar Nome")
+        print("2 - Editar Valor")
+        print("3 - Editar Quantidade")
+
+        # Testando ValueError na variavel editar
+        try:
+            editar = int(input("\nDeseja editar qual informação : "))
+        except ValueError:
+            print("Digite apenas números.")
+            continue
+        
+        # Aqui faz todo o processo para editar o nome do produto
+        if editar == 1:
+            editar_nome = input("Digite o novo nome do produto : ").strip().title()
+            if editar_nome == "":
+                print("Informação invalida.")
+                continue
+            
+            encontrado = False
+
+            for produto in lista_produtos:
+                if produto['id'] == inserir_id_produto:
+                    produto['nome'] = editar_nome
+                    encontrado = True
+                    print("--Produto Editado com Sucesso--")
                     break
-                except ValueError:
-                    print("Digite Apenas números aqui!")
+
+            if not encontrado:
+                print("Informação incorreta. Produto não encontrado.")
+                continue
+
+        # Aqui faz todo o processo para editar o valor do produto
+        elif editar == 2:
+
+            # Testando ValueError na variavel editar_valor
+            try:
+                editar_valor = float(input("Digite o novo valor do produto : "))
+            except ValueError:
+                print("Digite apenas números.")
+                continue
 
             encontrado = False
-            for produto in produtos:
-                if produto['id'] == editar:
+
+            # Percorrendo lista para encontrar o produto por ID e fazer a alteração do valor
+            for produto in lista_produtos:
+                if produto['id'] == inserir_id_produto:
+                    valor_produto = editar_valor
+                    produto['valor'] = valor_produto
+                    calculo = recalcular_estoque(x= produto['valor'], y= produto['quantidade'])
                     encontrado = True
-                    mostrar_informacao(produto)
+                    print("--Produto Editado com sucesso--")
                     break
+
             if not encontrado:
-                print("Verifique se digitou errado. Produto não encontrado no sistema!\n")
-            else:
-                print("\n1 - Editar Nome")
-                print("2 - Editar Preço")
-                print("3 - Editar Quantidade")
+                print("Informação incorreta. Produto não encontrado.")
+                continue
 
-                while True:
-                    try:
-                        editar_informacao = int(input("Deseja editar o que? : "))
-                        break
-                    except ValueError:
-                        print("Digite apenas números aqui.")
+        # Aqui faz todo o processo para editar a quantidade do produto
+        elif editar == 3:
 
-                if editar_informacao == 1:
-                    for produto in produtos:
-                        if produto['id'] == editar:
-                            novo_nome = input("Digite o novo nome do produto : ").strip().title()
-                            produto['nome'] = novo_nome
-                            print("---- Produto Editado ----")
-                            maior_valor, nome_produto = recalcular_maior_valor()
-                            break
+            # Testando ValueError na variavel editar_quantidade
+            try:
+                editar_quantidade = int(input("Digite a nova quantidade de produtos : "))
+            except ValueError:
+                print("Digite apenas números.")
+                continue
 
-                elif editar_informacao == 2:
-                    for produto in produtos:
-                        if produto['id'] == editar:
-                            while True:
-                                try:
-                                    novo_preco = float(input("Digite o novo preço : "))
-                                    break
-                                except ValueError:
-                                    print("Digite apenas números aqui!")
-                            produto['preco'] = novo_preco
-                            maior_valor, nome_produto = recalcular_maior_valor()
-                            print("---- Produto Editado ----")
-                            break
+            encontrado = False
 
-                elif editar_informacao == 3:
-                    for produto in produtos:
-                        if produto['id'] == editar:
-                            while True:
-                                try:
-                                    nova_quantidade = int(input("Digite a nova quantidade : "))
-                                    break
-                                except ValueError:
-                                    print("Digite apenas números aqui!")
-                            produto['quantidade'] = nova_quantidade
-                            maior_valor, nome_produto = recalcular_maior_valor()
-                            print("---- Produto Editado ----")                            
-                else:
-                    print("Verifique se digitou algo errado. Produto não encontrado no sistema.\n")
-                    
-    elif opcao == 6: #saida do programa
-        print("Obrigado!")
+            # Percorrendo lista para encontrar o produto por ID e fazer a alteração da quantidade
+            for produto in lista_produtos:
+                if produto['id'] == inserir_id_produto:
+                    quantidade_produto = editar_quantidade
+                    produto['quantidade'] = quantidade_produto #ERRO
+                    calculo = recalcular_estoque(x= produto['quantidade'], y= produto['valor'])
+                    encontrado = True
+                    print("--Produto Editado com sucesso--")
+                    break
+
+            if not encontrado:
+                print("Informação incorreta. Produto não encontrado.")
+                continue
+
+        else:
+            print("Informação incorreta. Produto não encontrado.")
+
+    # Opção 5 do menu : Remover Produtos
+    elif escolha_menu_opcoes == 5:
+
+        if not lista_produtos:
+            print("Não há produtos na lista para remover.")
+            continue
+
+        # Testando ValueError da variavel remover
+        try:
+            remover = int(input("\nDigite o ID do produto que deseja remover : "))
+        except ValueError:
+            print("Digite apenas números.")
+            continue
+
+        encontrado = False
+
+        # Percorrendo lista para verificar se o produto está na lista e remove-lo
+        for produto in lista_produtos:
+            if produto['id'] == remover:
+                print("\n--INFORMAÇÃO DO PRODUTO--")
+                mostrar_informacoes_produto(produto)
+                verificacao_remover_produto = input("Tem certeza que deseja remover o produto? (S) para sim ou (N) para não : ").strip().title()
+
+                if verificacao_remover_produto == "S":
+                    lista_produtos.remove(produto)
+                    encontrado = True
+                    print("--Produto Removido com sucesso--")
+                    break
+
+                elif verificacao_remover_produto == "N":
+                    encontrado = True
+                    print("Ok, produto não foi removido.")
+                    continue
+
+                elif verificacao_remover_produto != "S" or verificacao_remover_produto != "N":
+                    encontrado = True
+                    print("Informação incorreta! Escolha (S) para sim ou (N) para não.")
+                    continue
+        
+        if not encontrado:
+            print("Informação incorreta. Produto não encontrado.")
+            continue
+
+    # Opção 6 do menu : Sair
+    elif escolha_menu_opcoes == 6: #Opção 6 do menu : sair
+        sair_do_menu()
         break
-
-    elif opcao > 6:
-        print("Digite uma opção válida.")

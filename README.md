@@ -10,7 +10,6 @@ Projeto desenvolvido em Python com o objetivo de praticar conceitos fundamentais
 * Editar informações de produtos
 * Remover produtos
 * Calcular o valor total em estoque
-* Identificar o produto com maior valor em estoque
 
 ## Conceitos praticados
 

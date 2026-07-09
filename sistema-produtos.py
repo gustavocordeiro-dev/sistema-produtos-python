@@ -17,9 +17,10 @@ def mostrar_menu_opcoes():
     print("5 - Remover Produto")
     print("6 - Sair\n")
 
-# Opção 1 do menu : Cadastrar Produto
 def cadastrar_produto(produto):
+    # Está função tem o objetivo de cadastrar o (produto == dict ) e guardar dentro da (lista == lista_produtos)
 
+    print(f"\n---Cadastrando Produto {id_produtos}---")
     nome_produto = input("Digite o nome do produto : ").strip().title()
 
     if nome_produto == "":
@@ -54,36 +55,90 @@ def cadastrar_produto(produto):
 
     return produto, nome_produto
     
-# Opção 2 do menu : Listar Produto
 def listar_produtos(produto):
+    # Está função tem o objetivo de dar print das informações do produto
+
+    if not lista_produtos:
+        print("Não há produtos para listar.")
+        return
+    
     print("\n---Tabela de Produtos---")
     for produto in lista_produtos:
         mostrar_informacoes_produto(produto)
 
-# faz parte da Opção 3 do menu : Buscar Produto por (Nome)  
-def buscar_nome_produto1(produto, encontrado):
-    for produto in lista_produtos:
-        if produto['nome'] == buscar_nome_produto:
-            print("\n--Produto Encontrado--")
-            mostrar_informacoes_produto(produto)
-            encontrado = True
-    return encontrado
+def buscar_produto(produto):
+    # Está função tem o objetivo de fazer a busca do produto, sendo por nome ou id.
 
-# Faz parte da Opção 3 do menu : Buscar Produto por (Id)
-def buscar_id_produto2(produto, encontrado):
-    for produto in lista_produtos:
-        if produto['id'] == buscar_id_produto:
-            print("\n--Produto Encontrado--")
-            mostrar_informacoes_produto(produto)
-            encontrado = True
-    return encontrado
+    if not lista_produtos:
+        print("Não há produtos para buscar.")
+        return
+    
+    # Vendo se o usuario pretende fazer busca por ID ou Nome
+    print("\n---Buscando Produto---")
+    buscar_id_nome = input("Deseja buscar o produto na tabela por (nome) ou (id) : ").strip().title()
+    encontrado = False
 
-# Opção 6 do menu : sair
+    # Fazendo busca por Nome
+    if buscar_id_nome == "Nome":
+        buscar_nome_produto = input("Digite o nome do produto : ").strip().title()
+        encontrado = False
+
+        # faz parte da Opção 3 do menu : Buscar Produto por (Nome)
+        def buscar_nome_produto1(produto, encontrado):
+            for produto in lista_produtos:
+                if produto['nome'] == buscar_nome_produto:
+                    print("\n--Produto Encontrado--")
+                    mostrar_informacoes_produto(produto)
+                    encontrado = True
+            return encontrado
+        
+        #Percorrendo lista_produtos para achar produto
+        encontrado = buscar_nome_produto1(produto, encontrado)
+
+        if not encontrado:
+            print("Produto não encontrado.")
+            return
+        
+        return(buscar_nome_produto) 
+
+    elif buscar_id_nome == "Id":
+        #Testando ValueError para buscar_id_produto
+        try:
+            buscar_id_produto = int(input("Digite o ID do produto : "))
+        except ValueError:
+            print("Digite apenas números. Produto não encontrado")
+            return
+            
+        encontrado = False
+
+        # Faz parte da Opção 3 do menu : Buscar Produto por (Id)
+        def buscar_id_produto2(produto, encontrado):
+            for produto in lista_produtos:
+                if produto['id'] == buscar_id_produto:
+                    print("\n--Produto Encontrado--")
+                    mostrar_informacoes_produto(produto)
+                    encontrado = True
+            return encontrado
+
+        #Percorrendo lista_produtos para achar ID
+        encontrado = buscar_id_produto2(produto, encontrado)
+
+        if not encontrado:
+            print("Produto não encontrado.")
+            return
+        return buscar_id_produto
+    
+    else:
+        print("Informação incorreta. Produto não encontrado.")
+    
 def sair_do_menu(): 
+    # Está função finaliza o programa
+
     print("Obrigado.")
 
-# Função que mostra informações do produto
 def mostrar_informacoes_produto(produto):
+    # Está função mostra informações do produto, reutilizo em varias partes do código.
+
     print(f"-Produto nº {produto['id']}-")
     print(f"Nome do produto : {produto['nome']}")
     print(f"Valor do produto : {produto['valor']}")
@@ -116,72 +171,22 @@ while True:
     # Opção 1 do menu : Cadastrar Produto
     if escolha_menu_opcoes == 1:
 
-        print(f"\n---Cadastrando Produto {id_produtos}---")
         resultado_cadastro = cadastrar_produto(produto)
 
         if not resultado_cadastro:
             continue
 
-        # Contador de id do produto para sempre ter um número fixo
         id_produtos = contador_id + 1
-
-        # Um loop de contagem para o contador sempre estar aumentando
         contador_id = contador_id + 1
    
-
     # Opção 2 do menu : Listar Produto
     elif escolha_menu_opcoes == 2:
-        if not lista_produtos:
-            print("Não há produtos para listar.")
-            continue
-        
         listar_produtos(produto)
     
     # Opção 3 do menu : Buscar Produto
     elif escolha_menu_opcoes == 3:
-
-        # Verificando se a lista está vazia
-        if not lista_produtos:
-            print("Não há produtos para buscar.")
-            continue
+        buscar_produto(produto)
         
-        # Vendo se o usuario pretende fazer busca por ID ou Nome
-        print("\n---Buscando Produto---")
-        buscar_id_nome = input("Deseja buscar o produto na tabela por (nome) ou (id) : ").strip().title()
-        encontrado = False
-
-        # Fazendo busca por Nome
-        if buscar_id_nome == "Nome":
-            buscar_nome_produto = input("Digite o nome do produto : ").strip().title()
-
-            #Percorrendo lista_produtos para achar produto
-            encontrado = buscar_nome_produto1(produto, encontrado)
-         
-            if not encontrado:
-                print("Produto não encontrado.")
-                continue
-        
-        #Fazendo busca por ID
-        elif buscar_id_nome == "Id":
-
-            #Testando ValueError para buscar_id_produto
-            try:
-                buscar_id_produto = int(input("Digite o ID do produto : "))
-            except ValueError:
-                print("Digite apenas números. Produto não encontrado")
-                continue
-            
-            encontrado = False
-
-            #Percorrendo lista_produtos para achar ID
-            encontrado = buscar_id_produto2(produto, encontrado)
-
-            if not encontrado:
-                print("Produto não encontrado.")
-                continue
-        
-        else:
-            print("Informação incorreta. Produto não encontrado.")
 
     # Opção 4 do menu : Editar Informações do Produto
     elif escolha_menu_opcoes == 4:

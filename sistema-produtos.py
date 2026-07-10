@@ -130,7 +130,131 @@ def buscar_produto(produto):
     
     else:
         print("Informação incorreta. Produto não encontrado.")
+
+def editar_produto(produto):
+    #Está função tem objetivo de editar as informações do produto
+
+    if not lista_produtos:
+        print("Não há produtos para editar.")
+        return
     
+    try:
+        inserir_id_produto = int(input("\nDigite o ID do produto que deseja editar : "))
+    except ValueError:
+        print("Digite apenas números.")
+        return
+    
+    encontrado = False
+
+    for produto in lista_produtos:
+        if produto['id'] == inserir_id_produto:
+            print("\n---INFORMAÇÃO DO PRODUTO---")
+            mostrar_informacoes_produto(produto)
+            encontrado = True
+            break
+    
+    if not encontrado:
+        print(("Informação incorreta. Produto não encontrado."))
+        return
+    
+    def continuacao_editar_produto():
+        #Continuação do editar_produto() feita para separar em duas partes
+
+        print("---Editando Informações do Produto---")
+        print("1 - Editar Nome")
+        print("2 - Editar Valor")
+        print("3 - Editar Quantidade")
+
+        try:
+            editar = int(input("\nDeseja editar qual informação : "))
+        except ValueError:
+            print("Digite apenas números.")
+            return
+        
+        if editar > 3 or editar < 1:
+            print("Este número não está inserido no menu de opções.")
+        
+        def editar_produto_nome(produto):
+            #Editar o nome
+            
+            editar_nome = input("Digite o novo nome do produto : ").strip().title()
+            if editar_nome == "":
+                print("Informação invalida.")
+                return
+            
+            encontrado = False
+            for produto in lista_produtos:
+                if produto['id'] == inserir_id_produto:
+                    produto['nome'] = editar_nome
+                    encontrado = True
+                    print("--Produto Editado com Sucesso--")
+                    break
+                
+            if not encontrado:
+                print("Informação incorreta. Produto não encontrado.")
+                return
+
+        def editar_produto_valor(produto):
+            #Editar o valor
+
+            try:
+                editar_valor = float(input("Digite o novo valor do produto : "))
+            except ValueError:
+                print("Digite apenas números.")
+                return
+
+            encontrado = False
+
+            for produto in lista_produtos:
+                if produto['id'] == inserir_id_produto:
+                    valor_produto = editar_valor
+                    produto['valor'] = valor_produto
+                    recalcular_estoque(x= produto['valor'], y= produto['quantidade']) #Possivel erro
+                    encontrado = True
+                    print("--Produto Editado com sucesso--")
+                    break
+
+            if not encontrado:
+                print("Informação incorreta. Produto não encontrado.")
+                return
+                
+        def editar_produto_quantidade(produto):
+            #Editar a quantidade
+
+            try:
+                editar_quantidade = int(input("Digite a nova quantidade de produtos : "))
+            except ValueError:
+                print("Digite apenas números.")
+                return
+
+            encontrado = False
+
+            for produto in lista_produtos:
+                if produto['id'] == inserir_id_produto:
+                    quantidade_produto = editar_quantidade
+                    produto['quantidade'] = quantidade_produto #ERRO
+                    calculo = recalcular_estoque(x= produto['quantidade'], y= produto['valor'])
+                    encontrado = True
+                    print("--Produto Editado com sucesso--")
+                    break
+
+            if not encontrado:
+                print("Informação incorreta. Produto não encontrado.")
+                return
+
+        if editar == 1:
+            editar_produto_nome(produto)
+        elif editar == 2:
+            editar_produto_valor(produto)
+        elif editar == 3:
+            editar_produto_quantidade(produto)
+        else:
+            print("Informação incorreta. Produto não encontrado.")
+
+    continuacao_editar_produto() 
+    return inserir_id_produto
+
+
 def sair_do_menu(): 
     # Está função finaliza o programa
 
@@ -179,129 +303,21 @@ while True:
         id_produtos = contador_id + 1
         contador_id = contador_id + 1
    
-    # Opção 2 do menu : Listar Produto
     elif escolha_menu_opcoes == 2:
+        # Opção 2 do menu : Listar Produto
+
         listar_produtos(produto)
     
-    # Opção 3 do menu : Buscar Produto
     elif escolha_menu_opcoes == 3:
+        # Opção 3 do menu : Buscar Produto
+
         buscar_produto(produto)
         
-
-    # Opção 4 do menu : Editar Informações do Produto
     elif escolha_menu_opcoes == 4:
+        # Opção 4 do menu : Editar Produto
 
-        if not lista_produtos:
-            print("Não há produtos para editar.")
-            continue
-
-        # Variavel feita para indicar qual produto será editado
-        try:
-            inserir_id_produto = int(input("\nDigite o ID do produto que deseja editar : "))
-        except ValueError:
-            print("Digite apenas números.")
-            continue
-
-        encontrado = False
-
-        for produto in lista_produtos:
-            if produto['id'] == inserir_id_produto:
-                print("\n---INFORMAÇÃO DO PRODUTO---")
-                mostrar_informacoes_produto(produto)
-                encontrado = True
-                break
+        inserir_id_produto = editar_produto(produto)
         
-        if not encontrado:
-            print(("Informação incorreta. Produto não encontrado."))
-            continue
-
-        print("---Editando Informações do Produto---")
-        print("1 - Editar Nome")
-        print("2 - Editar Valor")
-        print("3 - Editar Quantidade")
-
-        # Testando ValueError na variavel editar
-        try:
-            editar = int(input("\nDeseja editar qual informação : "))
-        except ValueError:
-            print("Digite apenas números.")
-            continue
-        
-        # Aqui faz todo o processo para editar o nome do produto
-        if editar == 1:
-            editar_nome = input("Digite o novo nome do produto : ").strip().title()
-            if editar_nome == "":
-                print("Informação invalida.")
-                continue
-            
-            encontrado = False
-
-            for produto in lista_produtos:
-                if produto['id'] == inserir_id_produto:
-                    produto['nome'] = editar_nome
-                    encontrado = True
-                    print("--Produto Editado com Sucesso--")
-                    break
-
-            if not encontrado:
-                print("Informação incorreta. Produto não encontrado.")
-                continue
-
-        # Aqui faz todo o processo para editar o valor do produto
-        elif editar == 2:
-
-            # Testando ValueError na variavel editar_valor
-            try:
-                editar_valor = float(input("Digite o novo valor do produto : "))
-            except ValueError:
-                print("Digite apenas números.")
-                continue
-
-            encontrado = False
-
-            # Percorrendo lista para encontrar o produto por ID e fazer a alteração do valor
-            for produto in lista_produtos:
-                if produto['id'] == inserir_id_produto:
-                    valor_produto = editar_valor
-                    produto['valor'] = valor_produto
-                    calculo = recalcular_estoque(x= produto['valor'], y= produto['quantidade'])
-                    encontrado = True
-                    print("--Produto Editado com sucesso--")
-                    break
-
-            if not encontrado:
-                print("Informação incorreta. Produto não encontrado.")
-                continue
-
-        # Aqui faz todo o processo para editar a quantidade do produto
-        elif editar == 3:
-
-            # Testando ValueError na variavel editar_quantidade
-            try:
-                editar_quantidade = int(input("Digite a nova quantidade de produtos : "))
-            except ValueError:
-                print("Digite apenas números.")
-                continue
-
-            encontrado = False
-
-            # Percorrendo lista para encontrar o produto por ID e fazer a alteração da quantidade
-            for produto in lista_produtos:
-                if produto['id'] == inserir_id_produto:
-                    quantidade_produto = editar_quantidade
-                    produto['quantidade'] = quantidade_produto #ERRO
-                    calculo = recalcular_estoque(x= produto['quantidade'], y= produto['valor'])
-                    encontrado = True
-                    print("--Produto Editado com sucesso--")
-                    break
-
-            if not encontrado:
-                print("Informação incorreta. Produto não encontrado.")
-                continue
-
-        else:
-            print("Informação incorreta. Produto não encontrado.")
-
     # Opção 5 do menu : Remover Produtos
     elif escolha_menu_opcoes == 5:
 

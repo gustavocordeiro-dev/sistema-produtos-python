@@ -18,7 +18,7 @@ def mostrar_menu_opcoes():
     print("6 - Sair\n")
 
 def cadastrar_produto(produto):
-    # Está função tem o objetivo de cadastrar o (produto == dict ) e guardar dentro da (lista == lista_produtos)
+    #Esta função tem o objetivo de cadastrar o (produto == dict ) e guardar dentro da (lista == lista_produtos)
 
     print(f"\n---Cadastrando Produto {id_produtos}---")
     nome_produto = input("Digite o nome do produto : ").strip().title()
@@ -27,14 +27,12 @@ def cadastrar_produto(produto):
         print("Informação invalida.")
         return
     
-    # Testando ValueError para a variavel valor do produto
     try: 
         valor_produto = float(input("Digite o valor do produto : "))
     except ValueError:
         print("Digite apenas números. Produto não foi cadastrado!\n")
         return
 
-    # Testando ValueError para a variavel quantidade do produto
     try:
         quantidade_produto = int(input("Digite a quantidade do produto : "))
     except ValueError:
@@ -48,7 +46,7 @@ def cadastrar_produto(produto):
         "id" : id_produtos
     }
 
-    # Aqui cria o valor de estoque
+    #Aqui cria o valor de estoque
     produto['valor_estoque'] = valor_produto * quantidade_produto
     
     lista_produtos.append(produto)
@@ -56,7 +54,7 @@ def cadastrar_produto(produto):
     return produto, nome_produto
     
 def listar_produtos(produto):
-    # Está função tem o objetivo de dar print das informações do produto
+    #Esta função tem o objetivo de dar print das informações do produto
 
     if not lista_produtos:
         print("Não há produtos para listar.")
@@ -67,24 +65,23 @@ def listar_produtos(produto):
         mostrar_informacoes_produto(produto)
 
 def buscar_produto(produto):
-    # Está função tem o objetivo de fazer a busca do produto, sendo por nome ou id.
+    #Esta função tem o objetivo de fazer a busca do produto, sendo por nome ou id.
 
     if not lista_produtos:
         print("Não há produtos para buscar.")
         return
     
-    # Vendo se o usuario pretende fazer busca por ID ou Nome
     print("\n---Buscando Produto---")
     buscar_id_nome = input("Deseja buscar o produto na tabela por (nome) ou (id) : ").strip().title()
     encontrado = False
 
-    # Fazendo busca por Nome
     if buscar_id_nome == "Nome":
         buscar_nome_produto = input("Digite o nome do produto : ").strip().title()
         encontrado = False
 
-        # faz parte da Opção 3 do menu : Buscar Produto por (Nome)
         def buscar_nome_produto1(produto, encontrado):
+            #Faz parte da Opção 3 do menu : Buscar Produto por (Nome)
+
             for produto in lista_produtos:
                 if produto['nome'] == buscar_nome_produto:
                     print("\n--Produto Encontrado--")
@@ -102,7 +99,6 @@ def buscar_produto(produto):
         return(buscar_nome_produto) 
 
     elif buscar_id_nome == "Id":
-        #Testando ValueError para buscar_id_produto
         try:
             buscar_id_produto = int(input("Digite o ID do produto : "))
         except ValueError:
@@ -111,8 +107,9 @@ def buscar_produto(produto):
             
         encontrado = False
 
-        # Faz parte da Opção 3 do menu : Buscar Produto por (Id)
         def buscar_id_produto2(produto, encontrado):
+            #Faz parte da Opção 3 do menu : Buscar Produto por (Id)
+
             for produto in lista_produtos:
                 if produto['id'] == buscar_id_produto:
                     print("\n--Produto Encontrado--")
@@ -132,7 +129,7 @@ def buscar_produto(produto):
         print("Informação incorreta. Produto não encontrado.")
 
 def editar_produto(produto):
-    #Está função tem objetivo de editar as informações do produto
+    #Esta função tem objetivo de editar as informações do produto
 
     if not lista_produtos:
         print("Não há produtos para editar.")
@@ -254,14 +251,54 @@ def editar_produto(produto):
     continuacao_editar_produto() 
     return inserir_id_produto
 
+def remover_produto(produto):
+    #Esta função tem objetivo de remover os produtos da lista
+    if not lista_produtos:
+        print("Não há produtos na lista para remover.")
+        return
+
+    try:
+        remover = int(input("\nDigite o ID do produto que deseja remover : "))
+    except ValueError:
+        print("Digite apenas números.")
+        return
+
+    encontrado = False
+
+    #Percorrendo lista para verificar se o produto está na lista e remove-lo
+    for produto in lista_produtos:
+        if produto['id'] == remover:
+            print("\n--INFORMAÇÃO DO PRODUTO--")
+            mostrar_informacoes_produto(produto)
+            verificacao_remover_produto = input("Tem certeza que deseja remover o produto? (S) para sim ou (N) para não : ").strip().title()
+
+            if verificacao_remover_produto == "S":
+                lista_produtos.remove(produto)
+                encontrado = True
+                print("--Produto Removido com sucesso--")
+                break
+
+            elif verificacao_remover_produto == "N":
+                encontrado = True
+                print("Ok, produto não foi removido.")
+                continue
+
+            elif verificacao_remover_produto != "S" or verificacao_remover_produto != "N":
+                encontrado = True
+                print("Informação incorreta! Escolha (S) para sim ou (N) para não.")
+                continue
+    
+    if not encontrado:
+        print("Informação incorreta. Produto não encontrado.")
+        return
 
 def sair_do_menu(): 
-    # Está função finaliza o programa
+    #Esta função finaliza o programa
 
     print("Obrigado.")
 
 def mostrar_informacoes_produto(produto):
-    # Está função mostra informações do produto, reutilizo em varias partes do código.
+    #Esta função mostra informações do produto, reutilizo em varias partes do código.
 
     print(f"-Produto nº {produto['id']}-")
     print(f"Nome do produto : {produto['nome']}")
@@ -271,6 +308,8 @@ def mostrar_informacoes_produto(produto):
     print(f"ID do produto : {produto['id']}\n")
     
 def recalcular_estoque(x, y):
+    #Função feita para recalcular o estoque do produto
+
     for produto in lista_produtos:
         if produto['id'] == inserir_id_produto:
             produto['valor_estoque'] = x * y
@@ -279,7 +318,6 @@ def recalcular_estoque(x, y):
 while True:
     mostrar_menu_opcoes()
 
-    # Try except ValueError escolha de opções do menu
     while True:
         try:
             escolha_menu_opcoes = int(input("Digite uma opção : ")) 
@@ -287,13 +325,12 @@ while True:
         except ValueError:
             print("Opção invalida. Digite apenas números.\n") 
 
-    # Testando se o numero está no menu
     if escolha_menu_opcoes < 1 or escolha_menu_opcoes > 6: 
         print("Este número não está inserido no menu de opções.")
         continue
     
-    # Opção 1 do menu : Cadastrar Produto
     if escolha_menu_opcoes == 1:
+        #Opção 1 do menu : Cadastrar Produto
 
         resultado_cadastro = cadastrar_produto(produto)
 
@@ -304,64 +341,27 @@ while True:
         contador_id = contador_id + 1
    
     elif escolha_menu_opcoes == 2:
-        # Opção 2 do menu : Listar Produto
+        #Opção 2 do menu : Listar Produto
 
         listar_produtos(produto)
     
     elif escolha_menu_opcoes == 3:
-        # Opção 3 do menu : Buscar Produto
+        #Opção 3 do menu : Buscar Produto
 
         buscar_produto(produto)
         
     elif escolha_menu_opcoes == 4:
-        # Opção 4 do menu : Editar Produto
+        #Opção 4 do menu : Editar Produto
 
         inserir_id_produto = editar_produto(produto)
         
-    # Opção 5 do menu : Remover Produtos
     elif escolha_menu_opcoes == 5:
+        #Opção 5 do menu : Remover Produto
 
-        if not lista_produtos:
-            print("Não há produtos na lista para remover.")
-            continue
+        remover_produto(produto)
 
-        # Testando ValueError da variavel remover
-        try:
-            remover = int(input("\nDigite o ID do produto que deseja remover : "))
-        except ValueError:
-            print("Digite apenas números.")
-            continue
+    elif escolha_menu_opcoes == 6:
+        #Opção 6 do menu : Sair
 
-        encontrado = False
-
-        # Percorrendo lista para verificar se o produto está na lista e remove-lo
-        for produto in lista_produtos:
-            if produto['id'] == remover:
-                print("\n--INFORMAÇÃO DO PRODUTO--")
-                mostrar_informacoes_produto(produto)
-                verificacao_remover_produto = input("Tem certeza que deseja remover o produto? (S) para sim ou (N) para não : ").strip().title()
-
-                if verificacao_remover_produto == "S":
-                    lista_produtos.remove(produto)
-                    encontrado = True
-                    print("--Produto Removido com sucesso--")
-                    break
-
-                elif verificacao_remover_produto == "N":
-                    encontrado = True
-                    print("Ok, produto não foi removido.")
-                    continue
-
-                elif verificacao_remover_produto != "S" or verificacao_remover_produto != "N":
-                    encontrado = True
-                    print("Informação incorreta! Escolha (S) para sim ou (N) para não.")
-                    continue
-        
-        if not encontrado:
-            print("Informação incorreta. Produto não encontrado.")
-            continue
-
-    # Opção 6 do menu : Sair
-    elif escolha_menu_opcoes == 6: #Opção 6 do menu : sair
         sair_do_menu()
         break

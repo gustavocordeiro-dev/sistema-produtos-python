@@ -79,7 +79,7 @@ def buscar_produto(produto):
         buscar_nome_produto = input("Digite o nome do produto : ").strip().title()
         encontrado = False
 
-        def buscar_nome_produto1(produto, encontrado):
+        def buscar_produto_por_nome(produto, encontrado):
             #Faz parte da Opção 3 do menu : Buscar Produto por (Nome)
 
             for produto in lista_produtos:
@@ -90,7 +90,7 @@ def buscar_produto(produto):
             return encontrado
         
         #Percorrendo lista_produtos para achar produto
-        encontrado = buscar_nome_produto1(produto, encontrado)
+        encontrado = buscar_produto_por_nome(produto, encontrado)
 
         if not encontrado:
             print("Produto não encontrado.")
@@ -107,7 +107,7 @@ def buscar_produto(produto):
             
         encontrado = False
 
-        def buscar_id_produto2(produto, encontrado):
+        def buscar_produto_por_id(produto, encontrado):
             #Faz parte da Opção 3 do menu : Buscar Produto por (Id)
 
             for produto in lista_produtos:
@@ -118,7 +118,7 @@ def buscar_produto(produto):
             return encontrado
 
         #Percorrendo lista_produtos para achar ID
-        encontrado = buscar_id_produto2(produto, encontrado)
+        encontrado = buscar_produto_por_id(produto, encontrado)
 
         if not encontrado:
             print("Produto não encontrado.")

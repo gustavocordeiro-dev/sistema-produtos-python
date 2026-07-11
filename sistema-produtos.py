@@ -157,12 +157,12 @@ def editar_produto(produto):
     if not encontrado:
         print(("Informação incorreta. Produto não encontrado."))
         return
-    continuacao_editar_produto()
+    continuacao_editar_produto(produto, inserir_id_produto)
     return inserir_id_produto
     
-def continuacao_editar_produto():
+def continuacao_editar_produto(produto, inserir_id_produto):
     #Continuação do editar_produto() feita para separar em duas partes
-
+    
     print("---Editando Informações do Produto---")
     print("1 - Editar Nome")
     print("2 - Editar Valor")
@@ -178,35 +178,35 @@ def continuacao_editar_produto():
         print("Este número não está inserido no menu de opções.")
         
     if editar == 1:
-        editar_produto_nome(produto)
+        inserir_id_produto = editar_produto_nome(produto, inserir_id_produto)
     elif editar == 2:
-        editar_produto_valor(produto)
+        inserir_id_produto = editar_produto_valor(produto, inserir_id_produto)
     elif editar == 3:
-        editar_produto_quantidade(produto)
+        inserir_id_produto = editar_produto_quantidade(produto, inserir_id_produto)
     else:
         print("Informação incorreta. Produto não encontrado.")
         
-    def editar_produto_nome(produto):
-        #Editar o nome
+def editar_produto_nome(produto, inserir_id_produto):
+    #Editar o nome
             
-        editar_nome = input("Digite o novo nome do produto : ").strip().title()
-        if editar_nome == "":
-            print("Informação invalida.")
-            return
+    editar_nome = input("Digite o novo nome do produto : ").strip().title()
+    if editar_nome == "":
+        print("Informação invalida.")
+        return
             
-        encontrado = False
-        for produto in lista_produtos:
-            if produto['id'] == inserir_id_produto:
-                produto['nome'] = editar_nome
-                encontrado = True
-                print("--Produto Editado com Sucesso--")
-                break
+    encontrado = False
+    for produto in lista_produtos:
+        if produto['id'] == inserir_id_produto:
+            produto['nome'] = editar_nome
+            encontrado = True
+            print("--Produto Editado com Sucesso--")
+            break
                 
-        if not encontrado:
-            print("Informação incorreta. Produto não encontrado.")
-            return
+    if not encontrado:
+        print("Informação incorreta. Produto não encontrado.")
+        return
 
-def editar_produto_valor(produto):
+def editar_produto_valor(produto, inserir_id_produto):
     #Editar o valor
 
     try:
@@ -230,7 +230,7 @@ def editar_produto_valor(produto):
         print("Informação incorreta. Produto não encontrado.")
         return
                 
-def editar_produto_quantidade(produto):
+def editar_produto_quantidade(produto, inserir_id_produto):
     #Editar a quantidade
 
     try:

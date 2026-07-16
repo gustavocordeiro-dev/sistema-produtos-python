@@ -1,9 +1,6 @@
 # Lista de produtos onde irei guardar os (dicionarios : produtos)
 lista_produtos = []
 
-# Dicionario produto
-produto = {}
-
 # Contadores para usar nos ID´s dos produtos
 id_produtos = 1 
 contador_id = 1
@@ -17,7 +14,7 @@ def mostrar_menu_opcoes():
     print("5 - Remover Produto")
     print("6 - Sair\n")
 
-def cadastrar_produto(produto):
+def cadastrar_produto():
     #Esta função tem o objetivo de cadastrar o (produto == dict ) e guardar dentro da (lista == lista_produtos)
 
     print(f"\n---Cadastrando Produto {id_produtos}---")
@@ -53,7 +50,7 @@ def cadastrar_produto(produto):
 
     return produto, nome_produto
     
-def listar_produtos(produto):
+def listar_produtos():
     #Esta função tem o objetivo de dar print das informações do produto
 
     if not lista_produtos:
@@ -64,7 +61,7 @@ def listar_produtos(produto):
     for produto in lista_produtos:
         mostrar_informacoes_produto(produto)
 
-def buscar_produto(produto):
+def buscar_produto():
     #Esta função tem o objetivo de fazer a busca do produto, sendo por nome ou id.
 
     if not lista_produtos:
@@ -80,7 +77,7 @@ def buscar_produto(produto):
         encontrado = False
 
         #Percorrendo lista_produtos para achar produto
-        encontrado = buscar_produto_por_nome(produto, encontrado, buscar_nome_produto)
+        encontrado = buscar_produto_por_nome(encontrado, buscar_nome_produto)
 
         if not encontrado:
             print("Produto não encontrado.")
@@ -98,7 +95,7 @@ def buscar_produto(produto):
         encontrado = False
 
         #Percorrendo lista_produtos para achar ID
-        encontrado = buscar_produto_por_id(produto, encontrado, buscar_id_produto)
+        encontrado = buscar_produto_por_id(encontrado, buscar_id_produto)
 
         if not encontrado:
             print("Produto não encontrado.")
@@ -108,9 +105,7 @@ def buscar_produto(produto):
     else:
         print("Informação incorreta. Produto não encontrado.")
     
-
-
-def buscar_produto_por_nome(produto, encontrado, buscar_nome_produto):
+def buscar_produto_por_nome(encontrado, buscar_nome_produto):
     #Faz parte da Opção 3 do menu : Buscar Produto por (Nome)
 
     for produto in lista_produtos:
@@ -121,7 +116,7 @@ def buscar_produto_por_nome(produto, encontrado, buscar_nome_produto):
             break
     return encontrado
         
-def buscar_produto_por_id(produto, encontrado, buscar_id_produto):
+def buscar_produto_por_id(encontrado, buscar_id_produto):
     #Faz parte da Opção 3 do menu : Buscar Produto por (Id)
 
     for produto in lista_produtos:
@@ -132,7 +127,7 @@ def buscar_produto_por_id(produto, encontrado, buscar_id_produto):
             break
     return encontrado
     
-def editar_produto(produto):
+def editar_produto():
     #Esta função tem objetivo de editar as informações do produto
 
     if not lista_produtos:
@@ -157,10 +152,10 @@ def editar_produto(produto):
     if not encontrado:
         print(("Informação incorreta. Produto não encontrado."))
         return
-    continuacao_editar_produto(produto, inserir_id_produto)
+    continuacao_editar_produto(inserir_id_produto)
     return inserir_id_produto
     
-def continuacao_editar_produto(produto, inserir_id_produto):
+def continuacao_editar_produto(inserir_id_produto):
     #Continuação do editar_produto() feita para separar em duas partes
     
     print("---Editando Informações do Produto---")
@@ -178,15 +173,15 @@ def continuacao_editar_produto(produto, inserir_id_produto):
         print("Este número não está inserido no menu de opções.")
         
     if editar == 1:
-        inserir_id_produto = editar_produto_nome(produto, inserir_id_produto)
+        inserir_id_produto = editar_produto_nome(inserir_id_produto)
     elif editar == 2:
-        inserir_id_produto = editar_produto_valor(produto, inserir_id_produto)
+        inserir_id_produto = editar_produto_valor(inserir_id_produto)
     elif editar == 3:
-        inserir_id_produto = editar_produto_quantidade(produto, inserir_id_produto)
+        inserir_id_produto = editar_produto_quantidade(inserir_id_produto)
     else:
         print("Informação incorreta. Produto não encontrado.")
         
-def editar_produto_nome(produto, inserir_id_produto):
+def editar_produto_nome(inserir_id_produto):
     #Editar o nome
             
     editar_nome = input("Digite o novo nome do produto : ").strip().title()
@@ -206,7 +201,7 @@ def editar_produto_nome(produto, inserir_id_produto):
         print("Informação incorreta. Produto não encontrado.")
         return
 
-def editar_produto_valor(produto, inserir_id_produto):
+def editar_produto_valor(inserir_id_produto):
     #Editar o valor
 
     try:
@@ -219,9 +214,8 @@ def editar_produto_valor(produto, inserir_id_produto):
 
     for produto in lista_produtos:
         if produto['id'] == inserir_id_produto:
-            valor_produto = editar_valor
-            produto['valor'] = valor_produto
-            recalcular_estoque(x= produto['valor'], y= produto['quantidade']) #Possivel erro
+            produto['valor'] = editar_valor
+            recalcular_estoque(produto) 
             encontrado = True
             print("--Produto Editado com sucesso--")
             break
@@ -230,7 +224,7 @@ def editar_produto_valor(produto, inserir_id_produto):
         print("Informação incorreta. Produto não encontrado.")
         return
                 
-def editar_produto_quantidade(produto, inserir_id_produto):
+def editar_produto_quantidade(inserir_id_produto):
     #Editar a quantidade
 
     try:
@@ -243,9 +237,8 @@ def editar_produto_quantidade(produto, inserir_id_produto):
 
     for produto in lista_produtos:
         if produto['id'] == inserir_id_produto:
-            quantidade_produto = editar_quantidade
-            produto['quantidade'] = quantidade_produto #ERRO
-            recalcular_estoque(x= produto['quantidade'], y= produto['valor'])
+            produto['quantidade'] = editar_quantidade
+            recalcular_estoque(produto)
             encontrado = True
             print("--Produto Editado com sucesso--")
             break
@@ -254,7 +247,7 @@ def editar_produto_quantidade(produto, inserir_id_produto):
         print("Informação incorreta. Produto não encontrado.")
         return
 
-def remover_produto(produto):
+def remover_produto():
     #Esta função tem objetivo de remover os produtos da lista
     if not lista_produtos:
         print("Não há produtos na lista para remover.")
@@ -310,13 +303,11 @@ def mostrar_informacoes_produto(produto):
     print(f"Valor de estoque : {produto['valor_estoque']}")
     print(f"ID do produto : {produto['id']}\n")
     
-def recalcular_estoque(x, y):
+def recalcular_estoque(produto):
     #Função feita para recalcular o estoque do produto
 
-    for produto in lista_produtos:
-        if produto['id'] == inserir_id_produto:
-            produto['valor_estoque'] = x * y
-            return produto['valor_estoque']
+    produto['valor_estoque'] = (produto['valor'] * produto['quantidade'])
+    
 
 while True:
     mostrar_menu_opcoes()
@@ -335,7 +326,7 @@ while True:
     if escolha_menu_opcoes == 1:
         #Opção 1 do menu : Cadastrar Produto
 
-        resultado_cadastro = cadastrar_produto(produto)
+        resultado_cadastro = cadastrar_produto()
 
         if not resultado_cadastro:
             continue
@@ -346,22 +337,22 @@ while True:
     elif escolha_menu_opcoes == 2:
         #Opção 2 do menu : Listar Produto
 
-        listar_produtos(produto)
+        listar_produtos()
     
     elif escolha_menu_opcoes == 3:
         #Opção 3 do menu : Buscar Produto
 
-        buscar_produto(produto)
+        buscar_produto()
         
     elif escolha_menu_opcoes == 4:
         #Opção 4 do menu : Editar Produto
 
-        inserir_id_produto = editar_produto(produto)
+        inserir_id_produto = editar_produto()
         
     elif escolha_menu_opcoes == 5:
         #Opção 5 do menu : Remover Produto
 
-        remover_produto(produto)
+        remover_produto()
 
     elif escolha_menu_opcoes == 6:
         #Opção 6 do menu : Sair
